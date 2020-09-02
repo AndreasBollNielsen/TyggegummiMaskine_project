@@ -26,7 +26,7 @@ namespace TyggegummiMaskine_project
         //method to remove gum from dispenser
         public void Addgums()
         {
-            disp.Gums = disp.Add(5);
+            disp.Gums = disp.Add(55);
             disp.Updatenumber();
         }
 
