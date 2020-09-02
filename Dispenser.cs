@@ -8,9 +8,11 @@ namespace TyggegummiMaskine_project
 {
     class Dispenser
     {
+        //private fields
         private int number_of_gums;
         private List<Gum> gums;
 
+        //public properties
         public int Number_of_gums
         {
             get { return number_of_gums; }
@@ -22,61 +24,76 @@ namespace TyggegummiMaskine_project
             set { gums = value; }
         }
 
-        //empty 
+        //initialize list
         public Dispenser()
         {
             this.gums = new List<Gum>();
         }
 
-        /// <summary>
-        /// Add gums to the dispenser
-        /// </summary>
-        /// <param name="amount">amount of gums</param>
-        public void add(int amount)
+        // Add gums to the dispenser
+        public List<Gum> Add(int amount)
         {
-
-            List<int> flavortypes = flavormixer(amount);
+            List<int> flavortypes = Flavormixer(amount);
+            List<Gum> tempgums = new List<Gum>();
             Random randgen = new Random();
-            Console.WriteLine(flavortypes.Count);
 
+            int numbflavors = flavortypes.Count;
             for (int i = 0; i < amount; i++)
             {
-                int flavorNumb = randgen.Next(0, 3);
-              
-                flavortypes[flavorNumb] -= 1;
+                int flavorNumb = randgen.Next(0, numbflavors);
 
-                if (flavortypes[flavorNumb] > 0)
+                if (flavortypes.Count > 0)
                 {
-                    gums.Add(new Gum((Gum.Flavors)flavorNumb));
+                    if (flavortypes[flavorNumb] > 0)
+                    {
+                        flavortypes[flavorNumb] -= 1;
+                        tempgums.Add(new Gum((Gum.Flavors)flavorNumb));
 
+                    }
+                    else
+                    {
+                        flavortypes.RemoveAt(flavorNumb);
+                        numbflavors = flavortypes.Count;
+                        i--;
+                    }
                 }
+
 
             }
             flavortypes.Clear();
-            updatenumber();
+            Updatenumber();
+            return tempgums;
         }
 
-        /// <summary>
-        /// Remove a gum from dispenser
-        /// </summary>
-        /// <returns></returns>
-        public Gum remove()
+
+        // Remove a gum from dispenser
+        public Gum Remove()
         {
-            Random rand = new Random();
-            int randgum = rand.Next();
+            if (gums.Count > 0)
+            {
+                Random rand = new Random();
+                int randgum = rand.Next(0, gums.Count);
 
-            Gum extractedGum = gums[randgum];
-            gums.RemoveAt(randgum);
-            updatenumber();
-            return extractedGum;
+                Gum extractedGum = gums[randgum];
+                gums.RemoveAt(randgum);
+                Updatenumber();
+                return extractedGum;
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
-        private void updatenumber()
+        //method to update the number of gums in the dispenser
+        public void Updatenumber()
         {
             number_of_gums = gums.Count;
         }
 
-        private List<int> flavormixer(int amount)
+        //returns a list of mixed flavors
+        public List<int> Flavormixer(int amount)
         {
             double blueberries = Math.Round(amount / 100f * 25);
             double rasberries = Math.Round(amount / 100f * 12);
@@ -84,11 +101,13 @@ namespace TyggegummiMaskine_project
             double orange = Math.Round(amount / 100f * 19);
             double strawberry = Math.Round(amount / 100f * 14);
             double apple = Math.Round(amount / 100f * 10);
-            
+
             List<int> output = new List<int> { (int)blueberries, (int)rasberries, (int)tuttifrutti, (int)orange, (int)strawberry, (int)apple };
             Random rand = new Random();
             int numb = rand.Next(0, 6);
-            output[numb] -=1;
+
+            output[numb] -= 1;
+
             return output;
         }
     }
